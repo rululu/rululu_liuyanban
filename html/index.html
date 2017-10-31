@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+	</head>
+	<body>
+		<input type="text" id="text" />
+		<input type="text" id="name" />
+		<input type="submit" id="sub" value="留言" />
+		<div id="con">
+			
+		</div>
+	</body>
+</html>
+<script type="text/javascript">
+	$("#sub").click(function(){
+		var text=$("#text").val();
+		var name=$("#name").val();
+		$.ajax({
+			url:"http://localhost:3000/item/list",
+			type:"POST",
+			data:{
+				name:name,
+				con:text
+			},
+			success:function(e){
+				console.log(e)
+			}
+		})
+		$.ajax({
+			url:"http://localhost:3000/item/xian",
+			type:"get",
+			dataType:"json",
+			success:function(e){
+				for(var i in e){
+					$("#con").append("<div>"+"<p>"+e[i].content+"</p>"+"<p>"+e[i].name+"</p><span data-id='"+e[i].id+"'>删除</span>"+"</div>")
+				}
+				$("span").click(function(){
+					console.log(1)
+					var uid=$(this).attr("data-id")
+					var _this=$(this)
+					$.ajax({
+						type:"post",
+						url:"http://localhost:3000/item/delete",
+						data:{id:uid},
+						success:function(){
+							_this.parent().remove();
+								
+						}
+					});
+				})
+			}
+		})
+	})
+	
+</script>
